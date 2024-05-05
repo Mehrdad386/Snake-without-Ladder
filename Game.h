@@ -32,8 +32,8 @@ public:
 
 private:
 
-    int head ;
-    int tail ;
+    int head ; //to hold head of the snake position
+    int tail ; //to hold tail of the snake position
 
 };
 
@@ -45,6 +45,7 @@ public:
 
     int getSize(){ return size ; }
 
+    //to insert a random snake
     void randomSnake(){
 
         std::srand(time(0)) ;
@@ -54,6 +55,7 @@ public:
 
     }
 
+    //to push a new snake to snakes list
     void pushSnake(int head , int tail){
         
         Snake snake(head , tail) ;
@@ -66,5 +68,37 @@ private:
 
     int size ;
     std::vector<Snake> snakes ;
+
+};
+
+
+class Player{
+
+public:
+
+    std::string getName(){ return name ; }
+    int getBite(){ return bite ; }
+
+    void setName( std::string name ){ this->name = name ; }
+    void setBite( int bite ){ this->bite = bite ; }
+    void addBite(){ bite++ ; } // to add one to the number of bites
+
+    //to roll dice
+    int roll(){
+
+        std::srand(time(0)) ;
+        int roll = rand()%6 +1 ;
+        
+        if(roll == 6)
+            roll += rand()%6 + 1 ;
+
+        return roll ;
+
+    }
+
+private:
+
+    std::string name ;
+    int bite ; //to hold the number of snake's bites to the player
 
 };
