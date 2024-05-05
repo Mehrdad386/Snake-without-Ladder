@@ -45,6 +45,8 @@ public:
 
     int getSize(){ return size ; }
 
+    void setSize( int size ){ this->size = size ; }
+
     //to insert a random snake
     void randomSnake(){
 
@@ -100,5 +102,53 @@ private:
 
     std::string name ;
     int bite ; //to hold the number of snake's bites to the player
+
+};
+
+
+class Game{
+
+public:
+
+    void InputData(){
+
+        
+        int size ;
+        std::cin>>size ;
+        map.setSize(size) ;
+        
+        Player player ;
+        std::string name ;
+
+        for(int i{} ; i<playersNumber ; i++){
+            
+            std::cin>>name ;
+            player.setName(name) ;
+            players.push_back(player) ;
+        
+        }
+
+        std::cin>>snakesNumber ;
+
+        Snake snake ;
+        int position ;
+
+        for(int i{} ; i<snakesNumber ; i++){
+            
+            std::cin>>position ;
+            snake.setHead(position) ;
+
+            std::cin>>position ;
+            snake.setTail(position) ;
+
+        }
+    }
+
+private:
+
+    int snakesNumber ;
+    int playersNumber = 2 ;
+    std::vector<Player> players ;
+    Map map ;
 
 };
