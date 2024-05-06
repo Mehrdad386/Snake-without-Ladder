@@ -88,7 +88,7 @@ private:
 
     int position = 1 ;
     std::string name ;
-    int bite ; //to hold the number of snake's bites to the player
+    int bite = 0 ; //to hold the number of snake's bites
 
 };
 
@@ -153,7 +153,7 @@ public:
         InputData() ;
 
         while (true){
-            bool flag ;
+            bool flag = false ;
             //first player rolling
             int roll1 = players[0].roll() ;
             players[0].addToPosition(roll1) ;
@@ -163,8 +163,9 @@ public:
 
                 if(snakes[i].getHead() == players[0].getposition()){
 
-                    
+                    flag = true ;
                     players[0].setPosition(snakes[i].getTail()) ;
+                    players[0].addBite() ;
                     break;
 
                 }
@@ -174,6 +175,7 @@ public:
                 std::cout<<players[0].getName()<<" bited and now is on: "<<players[0].getposition()<<std::endl ;
                 flag = false ;
             }
+
             
             //second player rolling
             int roll2 = players[1].roll() ;
@@ -193,6 +195,15 @@ public:
             if(flag){
                 std::cout<<players[1].getName()<<" bited and now is on: "<<players[1].getposition()<<std::endl ;
                 flag = false ;
+            }
+
+
+            for(int i{} ; i<playersNumber ; i++){
+                if(players[i].getBite() ==2){
+                    players[i].setBite(0) ;
+                    randomSnake() ;
+                }
+
             }
 
             if(players[0].getposition() >= map.getSize() ||players[1].getposition() >= map.getSize())
