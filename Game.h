@@ -99,6 +99,7 @@ public:
         snake.setHead(randomHead);
         snake.setTail(randomTail);
         snakes.push_back(snake);
+        snakesNumber++ ;
     }
 
     // to get inputs from user
@@ -152,7 +153,8 @@ public:
             {
                 players[n].addToPosition(roll[0]);
                 std::cout << players[n].getName() << " rolled " << roll[0] << " and is on " << players[n].getPosition() << std::endl;
-                collisionSnake(n) ;
+                collisionSnake(n);
+                checkBite(n) ;
                 players[n].addMoves();
             }
             else
@@ -160,7 +162,8 @@ public:
                 players[n].addToPosition(roll[0]);
                 players[n].addToPosition(roll[1]);
                 std::cout << players[n].getName() << " rolled " << roll[0] << " then " << roll[1] << " and is on " << players[n].getPosition() << std::endl;
-                collisionSnake(n) ;
+                collisionSnake(n);
+                checkBite(n) ;
                 players[n].addMoves();
                 players[n].addMoves();
             }
@@ -239,6 +242,14 @@ public:
         {
             std::cout << players[n].getName() << " bited and now is on: " << players[n].getPosition() << std::endl;
             flag = false;
+        }
+    }
+
+
+    void checkBite( int n ){
+        if(players[n].getBite() ==2){
+            randomSnake() ;
+            players[n].setBite(0) ;
         }
     }
 
