@@ -1,227 +1,222 @@
-#include<iostream>
-#include<vector>
-#include<stdlib.h>
-#include<time.h>
-#include<array>
+#include <iostream>
+#include <vector>
+#include <stdlib.h>
+#include <time.h>
+#include <array>
 
-
-class Snake{
+class Snake
+{
 
 public:
+    Snake(int head, int tail)
+    {
 
-    Snake(int head , int tail){
-
-        setHead(head) ;
-        setTail(tail) ;
-
+        setHead(head);
+        setTail(tail);
     }
 
-    Snake(){
+    Snake()
+    {
 
-        head = 0 ;
-        tail = 0 ;
-
+        head = 0;
+        tail = 0;
     }
 
-    int getHead(){ return head ; }
+    int getHead() { return head; }
 
-    int getTail(){ return tail ; }
-    
-    void setTail( int tail ){ this->tail = tail ; }
+    int getTail() { return tail; }
 
-    void setHead( int head ){ this->head = head ; }
+    void setTail(int tail) { this->tail = tail; }
 
-private:
-
-    int head ; //to hold head of the snake position
-    int tail ; //to hold tail of the snake position
-
-};
-
-
-
-class Map{
-
-public:
-
-    int getSize(){ return size ; }
-
-    void setSize( int size ){ this->size = size ; }
+    void setHead(int head) { this->head = head; }
 
 private:
-
-    int size ;
-
+    int head; // to hold head of the snake position
+    int tail; // to hold tail of the snake position
 };
 
-
-class Player{
+class Map
+{
 
 public:
+    int getSize() { return size; }
 
+    void setSize(int size) { this->size = size; }
 
-    std::string getName(){ return name ; }
-    int getBite(){ return bite ; }
-    int getPosition (){ return position ;}
+private:
+    int size;
+};
 
+class Player
+{
 
-    void setName( std::string name ){ this->name = name ; }
-    void setBite( int bite ){ this->bite = bite ; }
-    void addBite(){ bite++ ; } // to add one to the number of bites
-    void setPosition( int position ){ this-> position = position ; }
-    void addToPosition( int roll ){ position += roll ; }
+public:
+    std::string getName() { return name; }
+    int getBite() { return bite; }
+    int getPosition() { return position; }
 
-    //to roll dice
-    std::array<int , 2> roll(){
+    void setName(std::string name) { this->name = name; }
+    void setBite(int bite) { this->bite = bite; }
+    void addBite() { bite++; } // to add one to the number of bites
+    void setPosition(int position) { this->position = position; }
+    void addToPosition(int roll) { position += roll; }
 
-        std::array<int , 2> roll ;
-        roll[0] = rand()%6 +1 ;
-        roll[1]  = 0 ;
-        
-        if(roll[0] == 6)
-            roll[1] += rand()%6 + 1 ;
+    // to roll dice
+    std::array<int, 2> roll()
+    {
 
-        return roll ;
+        std::array<int, 2> roll;
+        roll[0] = rand() % 6 + 1;
+        roll[1] = 0;
 
+        if (roll[0] == 6)
+            roll[1] += rand() % 6 + 1;
+
+        return roll;
     }
 
 private:
-
-    int position = 1 ;
-    std::string name ;
-    int bite = 0 ; //to hold the number of snake's bites
-
+    int position = 1;
+    std::string name;
+    int bite = 0; // to hold the number of snake's bites
 };
 
-
-class Game{
+class Game
+{
 
 public:
+    // to insert a random snake
+    void randomSnake()
+    {
 
-        //to insert a random snake
-    void randomSnake(){
-
-        Snake snake ;
-        int randomHead = rand()%map.getSize() + 1 ;
-        int randomTail = rand()%map.getSize() + 1 ;
-        snake.setHead(randomHead) ;
-        snake.setTail(randomTail) ;
-        snakes.push_back(snake) ;
-
+        Snake snake;
+        int randomHead = rand() % map.getSize() + 1;
+        int randomTail = rand() % map.getSize() + 1;
+        snake.setHead(randomHead);
+        snake.setTail(randomTail);
+        snakes.push_back(snake);
     }
 
+    // to get inputs from user
+    void InputData()
+    {
 
-    //to get inputs from user
-    void InputData(){
+        int size;
+        std::cin >> size;
+        map.setSize(size);
 
-        
-        int size ;
-        std::cin>>size ;
-        map.setSize(size) ;
-        
-        Player player ;
-        std::string name ;
+        Player player;
+        std::string name;
 
-        for(int i{} ; i<playersNumber ; i++){
-            
-            std::cin>>name ;
-            player.setName(name) ;
-            players.push_back(player) ;
-        
+        for (int i{}; i < playersNumber; i++)
+        {
+
+            std::cin >> name;
+            player.setName(name);
+            players.push_back(player);
         }
 
-        std::cin>>snakesNumber ;
+        std::cin >> snakesNumber;
 
-        Snake snake ;
-        int position ;
+        Snake snake;
+        int position;
 
-        for(int i{} ; i<snakesNumber ; i++){
-            
-            std::cin>>position ;
-            snake.setHead(position) ;
+        for (int i{}; i < snakesNumber; i++)
+        {
 
-            std::cin>>position ;
-            snake.setTail(position) ;
+            std::cin >> position;
+            snake.setHead(position);
 
-            snakes.push_back(snake) ;
+            std::cin >> position;
+            snake.setTail(position);
 
+            snakes.push_back(snake);
         }
     }
 
+    void move(int n)
+    {
 
-    void move(int n){
+        bool flag = false;
+        // first player rolling
+        std::array<int, 2> roll = players[n].roll();
 
-        bool flag = false ;
-        //first player rolling
-        std::array<int , 2> roll  = players[n].roll() ;
-
-        if(roll[1] == 0){
-        players[n].addToPosition(roll[0]) ;
-        std::cout<<players[n].getName()<<" rolled "<<roll[0]<<" and is on "<<players[n].getPosition()<<std::endl ;
+        if (players[n].getPosition() + roll[0] > map.getSize() || players[n].getPosition() + roll[0]+roll[1] > map.getSize()){
+            if(players[n].getPosition() + roll[0] < map.getSize()){
+                std::cout << players[n].getName() << " rolled " << roll[1] << " and is on " << players[n].getPosition() << std::endl;
+            }
+            if(players[n].getPosition() + roll[1] < map.getSize() && roll[1]>0){
+                std::cout << players[n].getName() << " rolled " << roll[1] << " and is on " << players[n].getPosition() << std::endl;
+            }
+            else
+                std::cout << players[n].getName() << " can't move\n";
         }
-        else{
-            players[n].addToPosition(roll[0]) ;
-            players[n].addToPosition(roll[1]) ;
-            std::cout<<players[n].getName()<<" rolled "<<roll[0]<<" then "<<roll[1]<<" and is on "<<players[n].getPosition()<<std::endl ;
-        }
-
-        for(int i =0 ; i<snakesNumber ; i++){
-
-            if(snakes[i].getHead() == players[n].getPosition()){
-
-            flag = true ;
-            players[n].setPosition(snakes[i].getTail()) ;
-            players[n].addBite() ;
-            break;
-
+        else
+        {
+            if (roll[1] == 0)
+            {
+                players[n].addToPosition(roll[0]);
+                std::cout << players[n].getName() << " rolled " << roll[0] << " and is on " << players[n].getPosition() << std::endl;
+            }
+            else
+            {
+                players[n].addToPosition(roll[0]);
+                players[n].addToPosition(roll[1]);
+                std::cout << players[n].getName() << " rolled " << roll[0] << " then " << roll[1] << " and is on " << players[n].getPosition() << std::endl;
             }
 
-        }
-        if(flag){
-            std::cout<<players[n].getName()<<" bited and now is on: "<<players[n].getPosition()<<std::endl ;
-            flag = false ;
-            }
+            for (int i = 0; i < snakesNumber; i++)
+            {
 
+                if (snakes[i].getHead() == players[n].getPosition())
+                {
 
-
-    }
-
-    //to run game
-    void run(){
-
-        InputData() ;
-
-        while (true){
-
-            int flag = false ;
-           
-           for(int i{} ; i<playersNumber ; i++){
-                move(i) ;
-
-                if(players[i].getPosition() >= map.getSize()){
-                    flag = true ;
-                    break;   
+                    flag = true;
+                    players[n].setPosition(snakes[i].getTail());
+                    players[n].addBite();
+                    break;
                 }
-           }
-
-           if(flag)
-                break;
-
-            
+            }
+            if (flag)
+            {
+                std::cout << players[n].getName() << " bited and now is on: " << players[n].getPosition() << std::endl;
+                flag = false;
+            }
         }
-        
-
-
     }
 
+    // to run game
+    void run()
+    {
 
+        InputData();
+
+        while (true)
+        {
+
+            int flag = false;
+
+            for (int i{}; i < playersNumber; i++)
+            {
+                move(i);
+
+                if (players[i].getPosition() >= map.getSize())
+                {
+                    flag = true;
+                    std::cout << players[i].getName() << " wins\n";
+                    break;
+                }
+            }
+
+            if (flag)
+                break;
+        }
+    }
 
 private:
-
-    int snakesNumber ;
-    int playersNumber = 2 ;
-    std::vector<Player> players ;
-    std::vector<Snake> snakes ;
-    Map map ;
-
+    int snakesNumber;
+    int playersNumber = 2;
+    std::vector<Player> players;
+    std::vector<Snake> snakes;
+    Map map;
 };
