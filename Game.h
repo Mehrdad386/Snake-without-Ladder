@@ -61,7 +61,7 @@ public:
 
     std::string getName(){ return name ; }
     int getBite(){ return bite ; }
-    int getposition (){ return position ;}
+    int getPosition (){ return position ;}
 
 
     void setName( std::string name ){ this->name = name ; }
@@ -147,69 +147,56 @@ public:
         }
     }
 
+
+    void move(int n){
+
+        bool flag = false ;
+        //first player rolling
+        int roll = players[n].roll() ;
+        players[n].addToPosition(roll) ;
+        std::cout<<players[n].getName()<<" rolled "<<roll<<" and is on "<<players[n].getPosition()<<std::endl ;
+
+        for(int i =0 ; i<snakesNumber ; i++){
+
+            if(snakes[i].getHead() == players[n].getPosition()){
+
+            flag = true ;
+            players[n].setPosition(snakes[i].getTail()) ;
+            players[n].addBite() ;
+            break;
+
+            }
+
+        }
+        if(flag){
+            std::cout<<players[n].getName()<<" bited and now is on: "<<players[n].getPosition()<<std::endl ;
+            flag = false ;
+            }
+
+
+
+    }
+
     //to run game
     void run(){
 
         InputData() ;
 
         while (true){
-            bool flag = false ;
-            //first player rolling
-            int roll1 = players[0].roll() ;
-            players[0].addToPosition(roll1) ;
-            std::cout<<players[0].getName()<<" rolled "<<roll1<<" and is on "<<players[0].getposition()<<std::endl ;
 
-            for(int i =0 ; i<snakesNumber ; i++){
+            int flag = false ;
+           
+           for(int i{} ; i<playersNumber ; i++){
+                move(i) ;
 
-                if(snakes[i].getHead() == players[0].getposition()){
-
+                if(players[i].getPosition() >= map.getSize()){
                     flag = true ;
-                    players[0].setPosition(snakes[i].getTail()) ;
-                    players[0].addBite() ;
-                    break;
-
+                    break;   
                 }
+           }
 
-            }
-            if(flag){
-                std::cout<<players[0].getName()<<" bited and now is on: "<<players[0].getposition()<<std::endl ;
-                flag = false ;
-            }
-
-            
-            //second player rolling
-            int roll2 = players[1].roll() ;
-            players[1].addToPosition(roll2) ;
-            std::cout<<players[1].getName()<<" rolled "<<roll2<<" and is on "<<players[1].getposition()<<std::endl ;
-            
-            for(int i = 0 ; i<snakesNumber ; i++){
-
-                if(snakes[i].getHead() == players[1].getposition()){
-                    flag = true ;
-                    players[1].setPosition(snakes[i].getTail()) ;
-                    break;
-
-                }
-                
-            }
-            if(flag){
-                std::cout<<players[1].getName()<<" bited and now is on: "<<players[1].getposition()<<std::endl ;
-                flag = false ;
-            }
-
-
-            for(int i{} ; i<playersNumber ; i++){
-                if(players[i].getBite() ==2){
-                    players[i].setBite(0) ;
-                    randomSnake() ;
-                }
-
-            }
-
-            if(players[0].getposition() >= map.getSize() ||players[1].getposition() >= map.getSize())
+           if(flag)
                 break;
-
-            
 
             
         }
