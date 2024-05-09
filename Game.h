@@ -54,12 +54,15 @@ public:
     std::string getName() { return name; }
     int getBite() { return bite; }
     int getPosition() { return position; }
+    int getMoves() { return moves; }
 
     void setName(std::string name) { this->name = name; }
     void setBite(int bite) { this->bite = bite; }
     void addBite() { bite++; } // to add one to the number of bites
     void setPosition(int position) { this->position = position; }
     void addToPosition(int roll) { position += roll; }
+    void setMoves(int moves) { this->moves = moves; }
+    void addMoves() { moves++; }
 
     // to roll dice
     std::array<int, 2> roll()
@@ -79,6 +82,7 @@ private:
     int position = 1;
     std::string name;
     int bite = 0; // to hold the number of snake's bites
+    int moves = 0;
 };
 
 class Game
@@ -136,20 +140,11 @@ public:
 
     void move(int n)
     {
-
-        bool flag = false;
-        // first player rolling
         std::array<int, 2> roll = players[n].roll();
 
-        if (players[n].getPosition() + roll[0] > map.getSize() || players[n].getPosition() + roll[0]+roll[1] > map.getSize()){
-            if(players[n].getPosition() + roll[0] < map.getSize()){
-                std::cout << players[n].getName() << " rolled " << roll[1] << " and is on " << players[n].getPosition() << std::endl;
-            }
-            if(players[n].getPosition() + roll[1] < map.getSize() && roll[1]>0){
-                std::cout << players[n].getName() << " rolled " << roll[1] << " and is on " << players[n].getPosition() << std::endl;
-            }
-            else
-                std::cout << players[n].getName() << " can't move\n";
+        if (players[n].getPosition() + roll[0] > map.getSize() || players[n].getPosition() + roll[0] + roll[1] > map.getSize())
+        {
+            finalMoves(n, roll);
         }
         else
         {
@@ -157,30 +152,17 @@ public:
             {
                 players[n].addToPosition(roll[0]);
                 std::cout << players[n].getName() << " rolled " << roll[0] << " and is on " << players[n].getPosition() << std::endl;
+                collisionSnake(n) ;
+                players[n].addMoves();
             }
             else
             {
                 players[n].addToPosition(roll[0]);
                 players[n].addToPosition(roll[1]);
                 std::cout << players[n].getName() << " rolled " << roll[0] << " then " << roll[1] << " and is on " << players[n].getPosition() << std::endl;
-            }
-
-            for (int i = 0; i < snakesNumber; i++)
-            {
-
-                if (snakes[i].getHead() == players[n].getPosition())
-                {
-
-                    flag = true;
-                    players[n].setPosition(snakes[i].getTail());
-                    players[n].addBite();
-                    break;
-                }
-            }
-            if (flag)
-            {
-                std::cout << players[n].getName() << " bited and now is on: " << players[n].getPosition() << std::endl;
-                flag = false;
+                collisionSnake(n) ;
+                players[n].addMoves();
+                players[n].addMoves();
             }
         }
     }
@@ -203,13 +185,60 @@ public:
                 if (players[i].getPosition() >= map.getSize())
                 {
                     flag = true;
-                    std::cout << players[i].getName() << " wins\n";
+                    win(i);
                     break;
                 }
             }
 
             if (flag)
                 break;
+        }
+    }
+
+    void win(int n)
+    {
+        std::cout << "-------------------------------\n";
+        std::cout << players[n].getName() << " wins\n";
+        std::cout << "moves: " << players[n].getMoves() << '\n';
+        std::cout << "number of snakes: " << snakesNumber << '\n';
+        std::cout << "-------------------------------\n";
+    }
+
+    void finalMoves(int n, std::array<int, 2> roll)
+    {
+
+        if (players[n].getPosition() + roll[0] < map.getSize())
+        {
+            std::cout << players[n].getName() << " rolled " << roll[1] << " and is on " << players[n].getPosition() << std::endl;
+            players[n].addMoves();
+        }
+        if (players[n].getPosition() + roll[1] < map.getSize() && roll[1] > 0)
+        {
+            std::cout << players[n].getName() << " rolled " << roll[1] << " and is on " << players[n].getPosition() << std::endl;
+            players[n].addMoves();
+        }
+        else
+            std::cout << players[n].getName() << " can't move\n";
+    }
+
+    void collisionSnake(int n)
+    {
+        bool flag;
+        for (int i = 0; i < snakesNumber; i++)
+        {
+
+            if (snakes[i].getHead() == players[n].getPosition())
+            {
+                flag = true;
+                players[n].setPosition(snakes[i].getTail());
+                players[n].addBite();
+                break;
+            }
+        }
+        if (flag)
+        {
+            std::cout << players[n].getName() << " bited and now is on: " << players[n].getPosition() << std::endl;
+            flag = false;
         }
     }
 
