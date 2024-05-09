@@ -2,6 +2,7 @@
 #include<vector>
 #include<stdlib.h>
 #include<time.h>
+#include<array>
 
 
 class Snake{
@@ -71,16 +72,16 @@ public:
     void addToPosition( int roll ){ position += roll ; }
 
     //to roll dice
-    int roll(){
+    std::array<int , 2> roll(){
 
+        std::array<int , 2> roll ;
+        roll[0] = rand()%6 +1 ;
+        roll[1]  = 0 ;
         
-        int roll1 = rand()%6 +1 ;
-        int roll2  = 0 ;
-        
-        if(roll1 == 6)
-            roll2 += rand()%6 + 1 ;
+        if(roll[0] == 6)
+            roll[1] += rand()%6 + 1 ;
 
-        return roll1 + roll2 ;
+        return roll ;
 
     }
 
@@ -152,9 +153,17 @@ public:
 
         bool flag = false ;
         //first player rolling
-        int roll = players[n].roll() ;
-        players[n].addToPosition(roll) ;
-        std::cout<<players[n].getName()<<" rolled "<<roll<<" and is on "<<players[n].getPosition()<<std::endl ;
+        std::array<int , 2> roll  = players[n].roll() ;
+
+        if(roll[1] == 0){
+        players[n].addToPosition(roll[0]) ;
+        std::cout<<players[n].getName()<<" rolled "<<roll[0]<<" and is on "<<players[n].getPosition()<<std::endl ;
+        }
+        else{
+            players[n].addToPosition(roll[0]) ;
+            players[n].addToPosition(roll[1]) ;
+            std::cout<<players[n].getName()<<" rolled "<<roll[0]<<" then "<<roll[1]<<" and is on "<<players[n].getPosition()<<std::endl ;
+        }
 
         for(int i =0 ; i<snakesNumber ; i++){
 
