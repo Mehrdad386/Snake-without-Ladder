@@ -95,11 +95,18 @@ public:
 
         Snake snake;
         int randomHead = rand() % map.getSize() + 1;
-        int randomTail = rand() % map.getSize() + 1;
+        int randomTail ;
+        
+        do{
+
+        randomTail = rand() % map.getSize() + 1;
+
+        }while(randomTail > randomHead) ;
+
         snake.setHead(randomHead);
         snake.setTail(randomTail);
         snakes.push_back(snake);
-        snakesNumber++ ;
+        snakesNumber++;
     }
 
     // to get inputs from user
@@ -154,7 +161,7 @@ public:
                 players[n].addToPosition(roll[0]);
                 std::cout << players[n].getName() << " rolled " << roll[0] << " and is on " << players[n].getPosition() << std::endl;
                 collisionSnake(n);
-                checkBite(n) ;
+                checkBite(n);
                 players[n].addMoves();
             }
             else
@@ -163,7 +170,7 @@ public:
                 players[n].addToPosition(roll[1]);
                 std::cout << players[n].getName() << " rolled " << roll[0] << " then " << roll[1] << " and is on " << players[n].getPosition() << std::endl;
                 collisionSnake(n);
-                checkBite(n) ;
+                checkBite(n);
                 players[n].addMoves();
                 players[n].addMoves();
             }
@@ -245,11 +252,12 @@ public:
         }
     }
 
-
-    void checkBite( int n ){
-        if(players[n].getBite() ==2){
-            randomSnake() ;
-            players[n].setBite(0) ;
+    void checkBite(int n)
+    {
+        if (players[n].getBite() == 2)
+        {
+            randomSnake();
+            players[n].setBite(0);
         }
     }
 
